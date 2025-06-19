@@ -21,13 +21,12 @@ const (
 )
 
 func MakeRefreshToken() (string, error) {
-	key := make([]byte, 32)
-	_, err := rand.Read(key)
+	token := make([]byte, 32)
+	_, err := rand.Read(token)
 	if err != nil {
 		return "", err
 	}
-
-	return hex.EncodeToString(key), nil
+	return hex.EncodeToString(token), nil
 }
 
 func HashPassword(password string) (string, error) {
