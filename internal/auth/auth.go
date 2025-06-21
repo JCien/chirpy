@@ -88,13 +88,27 @@ func ValidateJWT(tokenString, tokenSecret string) (uuid.UUID, error) {
 	return id, nil
 }
 
+func GetAPIKey(headers http.Header) (string, error) {
+	authHeader := headers.Get("Authorization")
+	if authHeader == "" {
+		return "", errors.New("No API Key found")
+	}
+
+	splitAuth := strings.Split(authHeader, " ")
+	if len(splitAuth) < 2 || splitAuth[0] != "ApiKey" {
+		return "", errors.New("malformed athorization header")
+	}
+
+	return splitAuth[1], nil
+}
+
 func GetBearerToken(headers http.Header) (string, error) {
-	authToken := headers.Get("Authorization")
-	if authToken == "" {
+	authHeader := headers.Get("Authorization")
+	if authHeader == "" {
 		return "", errors.New("No Auth token found")
 	}
 
-	splitAuth := strings.Split(authToken, " ")
+	splitAuth := strings.Split(authHeader, " ")
 	if len(splitAuth) < 2 || splitAuth[0] != "Bearer" {
 		return "", errors.New("malformed authorization header")
 	}
